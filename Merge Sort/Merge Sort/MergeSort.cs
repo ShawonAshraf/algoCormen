@@ -37,7 +37,7 @@ namespace Merge_Sort
         {
             if (startIndex < endIndex)
             {
-                int q = (int) Math.Floor((decimal) ((startIndex + endIndex)/2.0));
+                int q = (int)Math.Floor((decimal)((startIndex + endIndex) / 2.0));
                 _sort(startIndex, q);
                 _sort(q + 1, endIndex);
                 _merge(startIndex, q, endIndex);
@@ -50,8 +50,10 @@ namespace Merge_Sort
             int leftSubArrayRange = divideIndex - startIndex + 1;
             int rightSubArrayRange = endIndex - divideIndex;
 
+
+            // one element extra for the sentinel
             int[] leftSubArray = new int[leftSubArrayRange + 1];
-            int[] rightSubArray = new int[rightSubArrayRange + 1];
+            int[] rightSubArray = new int[rightSubArrayRange + 1]; 
 
             // insert sentinels
             leftSubArray[leftSubArrayRange] = 1000000;
@@ -60,16 +62,16 @@ namespace Merge_Sort
             // populate left subarray
             for (int i = 0; i < leftSubArrayRange; i++)
             {
-                leftSubArray[i] = _a[i];
+                leftSubArray[i] = _a[startIndex + i];
             }
 
             // right sub array
-            for (int i = rightSubArrayRange; i < _s; i++)
+            for (int i = 0; i < rightSubArrayRange; i++)
             {
-                rightSubArray[i] = _a[i];
+                rightSubArray[i] = _a[divideIndex + i];
             }
 
-            for (int i = 0, j = 0, k = 0; k < endIndex; k++)
+            for (int i = 0, j = 0, k = startIndex; k < endIndex; k++)
             {
                 if (leftSubArray[i] <= rightSubArray[j])
                 {
@@ -82,6 +84,24 @@ namespace Merge_Sort
                     j++;
                 }
             }
+
+            // print left and right sub array with merged 
+            // just testing
+
+            Console.WriteLine("Left sub array : ");
+            foreach (var a in rightSubArray)
+            {
+                Console.Write(a + " ");
+            }
+            Console.WriteLine();
+            Console.WriteLine("Right sub array : ");
+            foreach (var a in rightSubArray)
+            {
+                Console.Write(a + " ");
+            }
+            Console.WriteLine();
+            Console.WriteLine("Merged array : " +  ToString());
+            Console.WriteLine("\n");
         }
     }
 }

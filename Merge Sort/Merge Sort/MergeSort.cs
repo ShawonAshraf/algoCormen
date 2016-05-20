@@ -28,10 +28,8 @@ namespace Merge_Sort
         {
             string x = "";
             foreach (var a in _a) x += a + " ";
-            
             return x;
         }
-
 
         private void _sort(int startIndex, int endIndex)
         {
@@ -68,10 +66,10 @@ namespace Merge_Sort
             // right sub array
             for (int i = 0; i < rightSubArrayRange; i++)
             {
-                rightSubArray[i] = _a[divideIndex + i];
+                rightSubArray[i] = _a[divideIndex + i + 1];
             }
 
-            for (int i = 0, j = 0, k = startIndex; k < endIndex; k++)
+            for (int i = 0, j = 0, k = startIndex; k <= endIndex; k++)
             {
                 if (leftSubArray[i] <= rightSubArray[j])
                 {
@@ -84,24 +82,6 @@ namespace Merge_Sort
                     j++;
                 }
             }
-
-            // print left and right sub array with merged 
-            // just testing
-
-            Console.WriteLine("Left sub array : ");
-            foreach (var a in rightSubArray)
-            {
-                Console.Write(a + " ");
-            }
-            Console.WriteLine();
-            Console.WriteLine("Right sub array : ");
-            foreach (var a in rightSubArray)
-            {
-                Console.Write(a + " ");
-            }
-            Console.WriteLine();
-            Console.WriteLine("Merged array : " +  ToString());
-            Console.WriteLine("\n");
         }
     }
 }

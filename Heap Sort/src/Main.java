@@ -12,9 +12,11 @@ public class Main {
         System.out.println();
 
         //bh.heapSort();
-        bh.heapSort();
+        //bh.heapSortAscending();
         System.out.println("After ::: ");
-        bh.printBinaryHeap();
+        //bh.printBinaryHeap();
         System.out.println();
+        bh.heapSortDescending();
+        bh.printBinaryHeap();
     }
 }

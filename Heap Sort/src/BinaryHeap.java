@@ -77,11 +77,34 @@ public class BinaryHeap {
     }
 
     public void minHeapify(int i) {
+        int leftSubIndex = getLeftSubIndex(i);
+        int rightSubIndex = getRightSubIndex(i);
+        int smallestElementIndex;
 
+        if ((leftSubIndex < heapSize) && a[leftSubIndex] < a[i]) smallestElementIndex = leftSubIndex;
+        else smallestElementIndex = i;
+
+        if (rightSubIndex < heapSize && a[rightSubIndex] < a[smallestElementIndex]) smallestElementIndex = rightSubIndex;
+
+        if(smallestElementIndex != i) {
+            // swap
+            int temp = a[i];
+            a[i] = a[smallestElementIndex];
+            a[smallestElementIndex] = temp;
+
+            // call min heapify again
+            minHeapify(smallestElementIndex);
+        }
+    }
+
+    public void buildMinHeap() {
+        for(int i = (length / 2) - 1; i >= 0; i--) {
+            minHeapify(i);
+        }
     }
 
     //========================
-    public void heapSort() {
+    public void heapSortAscending() {
         buildMaxHeap();
 
         for(int i = length - 1; i >= 1; i--) {
@@ -93,6 +116,21 @@ public class BinaryHeap {
 
             // call maxHeapify
             maxHeapify(0);
+        }
+    }
+
+    public void heapSortDescending() {
+        buildMinHeap();
+
+        for(int i = length - 1; i >= 1; i--) {
+            // swap
+            int temp = a[0];
+            a[0] = a[i];
+            a[i] = temp;
+            heapSize--;
+
+            // call minHeapify
+            minHeapify(0);
         }
     }
 

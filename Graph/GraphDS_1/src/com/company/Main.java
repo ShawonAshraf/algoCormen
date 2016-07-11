@@ -2,6 +2,7 @@ package com.company;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -23,7 +24,11 @@ public class Main {
         g.print();
 
         System.out.println("\n\nCalling BFS :::\n");
-        g.callBFS();
+        for (int i = 1; i < 7; i++) {
+            int[] ar = g.bfs(i);
+            System.out.println(Arrays.toString(ar));
+        }
+
     }
 
 }

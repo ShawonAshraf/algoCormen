@@ -13,7 +13,6 @@ public class Graph {
     private ArrayList<Integer> cost[];
     private int[] indegree;
     private int[] outdegree;
-    private boolean[] bfsVisited;
     private int numNodes;
     private int numEdges;
 
@@ -27,11 +26,10 @@ public class Graph {
 
         outdegree = new int[this.numNodes];
         indegree = new int[this.numNodes];
-        bfsVisited = new boolean[this.numNodes];
 
         Arrays.fill(outdegree, 0);
         Arrays.fill(indegree, 0);
-        Arrays.fill(bfsVisited, false);
+
 
 
         for(int i = 1; i < this.numNodes; i++) {
@@ -86,12 +84,12 @@ public class Graph {
     }
 
     public int[] bfs(int source) {
-        int[] distance = null;
-        Queue<Integer> q = new LinkedList<>();
         int[] level = new int[numNodes];
+        boolean[] bfsVisited = new boolean[numNodes];
+        Queue<Integer> q = new LinkedList<>();
 
+        Arrays.fill(bfsVisited, false);
         Arrays.fill(level, 0);
-//        level[source] = 0;
 
         q.add(source);
         while(!q.isEmpty()) {
@@ -102,17 +100,13 @@ public class Graph {
                 if(level[t] == 0 && !bfsVisited[t]) {
                     level[t] = level[temp] + 1;
                     q.add(t);
+                    bfsVisited[t] = true;
                 }
             }
         }
 
-        distance = level;
-        return distance;
+       return level;
     }
 
-    public void callBFS() {
-        for(int i = 1; i < numNodes; i++) {
-            System.out.println("From Node # " + i + " : " + Arrays.toString(bfs(i)));
-        }
-    }
+
 }

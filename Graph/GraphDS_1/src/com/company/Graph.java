@@ -108,5 +108,8 @@ public class Graph {
        return level;
     }
 
+    public void djikstra() {
+
+    }
 
 }

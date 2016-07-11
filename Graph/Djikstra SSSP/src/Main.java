@@ -1,109 +1,117 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.*;
 
 public class Main {
     private static class Graph {
-        private ArrayList<Integer> mat[];
-        private ArrayList<Integer> cost[];
-        private int[] distance;
-        private int[] p;
+        private int nVertices;
+        private int nEdges;
+        private ArrayList<ArrayList<Integer>> verticeList;
+        private ArrayList<ArrayList<Integer>> edgeList;
+        private int[] dist;
+        private int[] prev;
+        private PriorityQueue<Integer> q;
+        private final int VAL = 100000;
 
-        private final static int SENTINEL = 0;
 
-        private int numNodes;
-        private int numEdges;
+        public Graph(int nVertices, int nEdges) {
+            this.nEdges = nEdges;
+            this.nVertices = nVertices;
 
-        public Graph() {}
-        public Graph(int numNodes, int numEdges) {
-            this.numNodes = numNodes;
-            this.numEdges = numEdges;
+            verticeList = new ArrayList<>();
+            edgeList = new ArrayList<>();
 
-            mat = new ArrayList[this.numNodes];
-            cost = new ArrayList[this.numNodes];
-            distance = new int[this.numNodes];
-            p = new int[this.numNodes];
+            dist = new int[nVertices];
+            prev = new int[nVertices];
 
-            Arrays.fill(distance, SENTINEL, 1, distance.length - 1);
-
-            for(int i = 0; i < this.numNodes; i++) {
-                mat[i] = new ArrayList<>();
-                cost[i] = new ArrayList<>();
-
-                for(int j = 0; j < this.numNodes; j++) { cost[i].add(0); }
+            for(int i = 0; i < nVertices; i++) {
+                verticeList.add(new ArrayList<>());
+                edgeList.add(new ArrayList<>());
             }
+
+//            q = new PriorityQueue<>(new Comparator<Integer>() {
+//                @Override
+//                public int compare(Integer a, Integer b) {
+//                    if (dist[a] < dist[b]) return -1;
+//                    if (dist[a] > dist[b]) return 1;
+//                    return a - b;
+//                }
+//            });
+
+            Arrays.fill(dist, 1, nVertices, VAL);
         }
 
-        public void add(int node1, int node2, int edge) {
-            mat[node1 - 1].add(node2 - 1);
-            cost[node1 - 1].add(node2 - 1, edge);
+        public void add(int a, int b, int w) {
+            verticeList.get(a).add(b);
+            verticeList.get(b).add(a);
+
+            edgeList.get(a).add(w);
+            edgeList.get(b).add(w);
         }
-
-
+        
+        
         public void djikstra() {
-            PriorityQueue<Integer>q = new PriorityQueue<>(new Comparator<Integer>() {
+            q = new PriorityQueue<>(new Comparator<Integer>() {
                 @Override
                 public int compare(Integer a, Integer b) {
-                    if(distance[a] < distance[b]) return -1;
-                    if(distance[a] > distance[b]) return 1;
+                    if (dist[a] < dist[b]) return -1;
+                    if (dist[a] > dist[b]) return 1;
                     return a - b;
                 }
             });
 
             q.add(0);
-            while(!q.isEmpty()) {
-                int temp = q.poll();
-                for (int i = 0; i < mat[temp].size(); i++) {
-                    int t = mat[temp].get(i);
-                    int c = cost[temp].get(i);
-
-                    if (distance[t] > distance[temp] + c) {
-                        q.remove(t);
-                        distance[t] = distance[temp] + c;
-                        q.add(t);
-                        p[t] = temp;
+            while (!q.isEmpty()) {
+                int u = q.poll();
+                for (int i = 0; i < verticeList.get(u).size(); i++) {
+                    int v = verticeList.get(u).get(i);
+                    int duv = edgeList.get(u).get(i);
+                    if (dist[v] > dist[u] + duv) {
+                        q.remove(v);
+                        dist[v] = dist[u] + duv;
+                        q.add(v);
+                        prev[v] = u;
                     }
                 }
             }
         }
 
-        public void printShortestPath() {
-            if(distance[distance.length - 1] == SENTINEL) System.out.println("No shortest path");
+        public void printShortPathAndCost() {
+            if (dist[nVertices - 1] == VAL)
+                System.out.println(-1);
             else {
-                ArrayList<Integer> sp = new ArrayList<>();
-                int i = p.length - 1;
-                while(i != 0) {
-                    sp.add(i);
-                    i = p[i];
-                    i--;
+                ArrayList<Integer> shortest = new ArrayList<Integer>();
+                int ptr = nVertices - 1;
+                while (true) {
+                    shortest.add(ptr);
+                    if (ptr == 0)
+                        break;
+                    ptr = prev[ptr];
                 }
-
-                System.out.print("Shortest Path : ");
-                sp.forEach(k -> System.out.print(k + " "));
-                System.out.println();
+                for (int i = shortest.size() - 1; i > 0; i--)
+                    System.out.print((shortest.get(i) + 1) + " ");
+                System.out.println(shortest.get(0) + 1);
+                System.out.println("Cost : " + dist[nVertices - 1] + " in " + Arrays.toString(dist));
             }
         }
+
     }
-
-
 
     public static void main(String[] args) {
         int v, e;
-        Scanner in = new Scanner(System.in);
-
+        Graph g;
+        Scanner in = new Scanner(new BufferedReader(new InputStreamReader(System.in)));
         v = in.nextInt();
         e = in.nextInt();
 
-        Graph g = new Graph(v, e);
+        g = new Graph(v, e);
 
         for(int i = 0; i < e; i++) {
-            int a, b, w;
-            a = in.nextInt();
-            b = in.nextInt();
-            w = in.nextInt();
-
-            g.add(a, b, w);
+            g.add(in.nextInt() - 1, in.nextInt() - 1, in.nextInt());
         }
 
         g.djikstra();
-        g.printShortestPath();
+        g.printShortPathAndCost();
     }
 }
+
